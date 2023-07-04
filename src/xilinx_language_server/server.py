@@ -23,18 +23,25 @@ from lsprotocol.types import (
 from pygls.server import LanguageServer
 
 
-def check_extension(
-    uri: str,
-) -> Literal["vivado", "vitis"]:
-    r"""Check extension.
+def check_filetype(
+    uri: str, shebang: str = ""
+) -> Literal["vivado", "vitis", ""]:
+    r"""Check filetype.
 
     :param uri:
     :type uri: str
-    :rtype: Literal["vivado", "vitis"]
+    :param shebang:
+    :type shebang: str
+    :rtype: Literal["vivado", "vitis", ""]
     """
     if uri.split(os.path.extsep)[-1] == "xdc":
         return "vivado"
-    return "vitis"
+    if shebang[0:2] == "#!":
+        if re.findall("vivado", shebang):
+            return "vivado"
+        if re.findall("xsct", shebang):
+            return "vitis"
+    return ""
 
 
 def get_document() -> dict[str, dict[str, str]]:
@@ -73,13 +80,18 @@ class XilinxLanguageServer(LanguageServer):
             :type params: TextDocumentPositionParams
             :rtype: Hover | None
             """
-            ext = check_extension(params.text_document.uri)
+            doc = self.workspace.get_document(params.text_document.uri)
+            content = doc.source
+            shebang = content.split("\n")[0]
+            filetype = check_filetype(params.text_document.uri, shebang)
+            if not filetype:
+                return None
             word = self._cursor_word(
                 params.text_document.uri, params.position, True
             )
             if not word:
                 return None
-            doc = self.document[ext].get(word[0])
+            doc = self.document[filetype].get(word[0])
             if not doc:
                 return None
             return Hover(
@@ -95,7 +107,12 @@ class XilinxLanguageServer(LanguageServer):
             :type params: CompletionParams
             :rtype: CompletionList
             """
-            ext = check_extension(params.text_document.uri)
+            doc = self.workspace.get_document(params.text_document.uri)
+            content = doc.source
+            shebang = content.split("\n")[0]
+            filetype = check_filetype(params.text_document.uri, shebang)
+            if not filetype:
+                return CompletionList(is_incomplete=False, items=[])
             word = self._cursor_word(
                 params.text_document.uri, params.position, False
             )
@@ -104,10 +121,10 @@ class XilinxLanguageServer(LanguageServer):
                 CompletionItem(
                     label=x,
                     kind=CompletionItemKind.Function,
-                    documentation=self.document[ext][x],
+                    documentation=self.document[filetype][x],
                     insert_text=x,
                 )
-                for x in self.document[ext]
+                for x in self.document[filetype]
                 if x.startswith(token)
             ]
             return CompletionList(is_incomplete=False, items=items)

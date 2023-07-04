@@ -40,16 +40,13 @@
 Language server for xilinx:
 
 - [vivado](https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vivado-design-tools.html)
-
 - [vitis](https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vitis.html)
-
 - [x] document hover
-
 - [x] completion
 
-![document hover](https://github.com/Freed-Wu/pkgbuild-language-server/assets/32936898/2b4c4683-5b6c-458a-92fc-d98c041277a9)
+![document hover](https://github.com/Freed-Wu/xilinx-language-server/assets/32936898/ad13e891-0d73-457c-9899-3a2e2f86cbe2)
 
-![completion](https://github.com/Freed-Wu/pkgbuild-language-server/assets/32936898/7a0b15d5-9070-446d-b1b9-a4cdcc79f522)
+![completion](https://github.com/Freed-Wu/xilinx-language-server/assets/32936898/2111f6fe-d42a-4ef7-b529-688f3a139959)
 
 Read
 [![readthedocs](https://shields.io/readthedocs/xilinx-language-server)](https://xilinx-language-server.readthedocs.io)
@@ -61,6 +58,14 @@ to know more.
 - [vivado-tcl-commands](https://docs.xilinx.com/r/en-US/ug835-vivado-tcl-commands)
 - [vitis-embedded](https://docs.xilinx.com/r/en-US/ug1400-vitis-embedded)
 
+## Update
+
+Install `vivado` and `vitis`, then
+
+- Run `scripts/vivado.tcl` to update `src/xilinx_language_server/assets/json/vivado.json`
+- Run `scripts/xsct.tcl` to update `src/xilinx_language_server/assets/json/xsct.json`
+
 ## Related Projects
 
-- [xilinx.vim](https://github.com/Freed-Wu/xilinx.vim)
+- [xilinx.vim](https://github.com/Freed-Wu/xilinx.vim): vim filetype plugin
+  for xilinx
