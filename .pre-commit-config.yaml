@@ -46,6 +46,9 @@ repos:
     rev: 3.0.0
     hooks:
       - id: check-mailmap
+      - id: shellcheck
+        exclude_types:
+          - zsh
   - repo: https://github.com/rhysd/actionlint
     rev: v1.6.25
     hooks:
@@ -77,6 +80,10 @@ repos:
     rev: "20230309.03"
     hooks:
       - id: perltidy
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.6.0-2
+    hooks:
+      - id: shfmt
   - repo: https://github.com/psf/black
     rev: 23.3.0
     hooks:
