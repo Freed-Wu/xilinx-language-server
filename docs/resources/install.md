@@ -3,7 +3,7 @@
 ## [AUR](https://aur.archlinux.org/packages/xilinx-language-server)
 
 ```sh
-yay -S python-xilinx-language-server
+yay -S xilinx-language-server
 ```
 
 ## [NUR](https://nur.nix-community.org/repos/Freed-Wu)
