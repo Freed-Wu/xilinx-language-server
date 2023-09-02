@@ -76,10 +76,6 @@ repos:
       - id: markdownlint-cli2
         additional_dependencies:
           - markdown-it-texmath@0.9.1
-  - repo: https://github.com/perltidy/perltidy
-    rev: "20230701.02"
-    hooks:
-      - id: perltidy
   - repo: https://github.com/scop/pre-commit-shfmt
     rev: v3.7.0-1
     hooks:
