@@ -122,3 +122,4 @@ repos:
 ci:
   skip:
     - pyright
+    - shellcheck
