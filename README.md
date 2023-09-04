@@ -37,10 +37,13 @@
 [![pypi/implementation](https://shields.io/pypi/implementation/xilinx-language-server)](https://pypi.org/project/xilinx-language-server/#files)
 [![pypi/pyversions](https://shields.io/pypi/pyversions/xilinx-language-server)](https://pypi.org/project/xilinx-language-server/#files)
 
-Language server for xilinx:
+Language server and vim plugin for xilinx:
 
 - [vivado](https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vivado-design-tools.html)
 - [vitis](https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vitis.html)
+
+Support:
+
 - [x] document hover
 - [x] completion
 
@@ -58,14 +61,19 @@ to know more.
 - [vivado-tcl-commands](https://docs.xilinx.com/r/en-US/ug835-vivado-tcl-commands)
 - [vitis-embedded](https://docs.xilinx.com/r/en-US/ug1400-vitis-embedded)
 
-## Update
+## Develop
 
-Install `vivado` and `vitis`, then
+Install `vivado`, `vitis` and `neovim`, then run `scripts/update.sh`.
 
-- Run `scripts/vivado.tcl` to update `src/xilinx_language_server/assets/json/vivado.json`
-- Run `scripts/xsct.tcl` to update `src/xilinx_language_server/assets/json/xsct.json`
+## Vim Plugin
 
-## Related Projects
+You can use
+[branch release](https://github.com/Freed-Wu/xilinx-language-server/tree/release)
+to avoid downloading unnecessary files for vim plugin. Such as for
+[dein.vim](https://github.com/Shougo/dein.vim):
 
-- [xilinx.vim](https://github.com/Freed-Wu/xilinx.vim): vim filetype plugin
-  for xilinx
+```vim
+call dein#add('Freed-Wu/xilinx-language-server', {
+      \ 'rev': 'release',
+      \ })
+```

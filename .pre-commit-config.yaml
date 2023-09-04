@@ -106,6 +106,14 @@ repos:
           - -cpyproject.toml
         additional_dependencies:
           - tomli
+  - repo: https://github.com/vimjas/vint
+    rev: v0.4a3
+    hooks:
+      - id: vint
+  - repo: https://github.com/google/vimdoc
+    rev: v0.7.1
+    hooks:
+      - id: vimdoc
   - repo: https://github.com/nix-community/nixpkgs-fmt
     rev: v1.3.0
     hooks:

@@ -1,0 +1,10 @@
+{
+  "name": "xilinx",
+  "description": "Vim filetype plugin for xilinx.",
+  "version": "0.0.1",
+  "author": "Wu Zhenyu",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Freed-Wu/xilinx.vim"
+  }
+}

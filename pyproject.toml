@@ -71,6 +71,9 @@ write-to = "src/xilinx_language_server/_metainfo.py"
 [tool.mdformat]
 number = true
 
+[tool.codespell]
+ignore-words-list = "hsi"
+
 [tool.black]
 line-length = 79
 

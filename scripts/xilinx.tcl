@@ -1,3 +1,4 @@
+# sourced by scripts/vivado.tcl and scripts/xsct.tcl
 set path src/xilinx_language_server/assets/json
 exec mkdir -p $path
 

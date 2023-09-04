@@ -26,8 +26,8 @@ jobs:
         with:
           # https://github.com/orgs/community/discussions/25702
           persist-credentials: false
-          repository: Freed-Wu/xilinx.vim
-          path: xilinx.vim
+          ref: release
+          path: release
       - uses: rhysd/action-setup-vim@v1
         id: vim
         with:
