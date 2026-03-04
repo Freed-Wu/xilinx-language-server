@@ -1,6 +1,7 @@
 r"""Server
 ==========
 """
+
 import json
 import os
 import re
@@ -20,7 +21,7 @@ from lsprotocol.types import (
     Range,
     TextDocumentPositionParams,
 )
-from pygls.server import LanguageServer
+from pygls.lsp.server import LanguageServer
 
 
 def check_filetype(
@@ -34,12 +35,12 @@ def check_filetype(
     :type shebang: str
     :rtype: Literal["vivado", "vitis", ""]
     """
-    if uri.split(os.path.extsep)[-1] == "xdc":
+    if uri.endswith("xdc"):
         return "vivado"
-    if shebang[0:2] == "#!":
-        if re.findall("vivado", shebang):
+    if shebang.startswith("#!"):
+        if "vivado" in shebang:
             return "vivado"
-        if re.findall("xsct", shebang):
+        if "xsct" in shebang:
             return "vitis"
     return ""
 
@@ -49,12 +50,10 @@ def get_document() -> dict[str, dict[str, str]]:
 
     :rtype: dict[str, dict[str, str]]
     """
-    path = os.path.join(
-        os.path.join(os.path.dirname(__file__), "assets"), "json"
-    )
-    with open(os.path.join(path, "vivado.json"), "r") as f:
+    path = os.path.join(os.path.dirname(__file__), "assets", "json")
+    with open(os.path.join(path, "vivado.json")) as f:
         vivado = json.load(f)
-    with open(os.path.join(path, "xsct.json"), "r") as f:
+    with open(os.path.join(path, "xsct.json")) as f:
         xsct = json.load(f)
     return {"vivado": vivado, "vitis": xsct}
 
@@ -80,9 +79,9 @@ class XilinxLanguageServer(LanguageServer):
             :type params: TextDocumentPositionParams
             :rtype: Hover | None
             """
-            doc = self.workspace.get_document(params.text_document.uri)
+            doc = self.workspace.get_text_document(params.text_document.uri)
             content = doc.source
-            shebang = content.split("\n")[0]
+            shebang = content.splitlines()[0]
             filetype = check_filetype(params.text_document.uri, shebang)
             if not filetype:
                 return None
@@ -107,9 +106,9 @@ class XilinxLanguageServer(LanguageServer):
             :type params: CompletionParams
             :rtype: CompletionList
             """
-            doc = self.workspace.get_document(params.text_document.uri)
+            doc = self.workspace.get_text_document(params.text_document.uri)
             content = doc.source
-            shebang = content.split("\n")[0]
+            shebang = content.splitlines()[0]
             filetype = check_filetype(params.text_document.uri, shebang)
             if not filetype:
                 return CompletionList(is_incomplete=False, items=[])
@@ -138,9 +137,9 @@ class XilinxLanguageServer(LanguageServer):
         :type position: Position
         :rtype: str
         """
-        doc = self.workspace.get_document(uri)
+        doc = self.workspace.get_text_document(uri)
         content = doc.source
-        line = content.split("\n")[position.line]
+        line = content.splitlines()[position.line]
         return str(line)
 
     def _cursor_word(
