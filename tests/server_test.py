@@ -1,4 +1,5 @@
 r"""Test server"""
+
 from xilinx_language_server.server import get_document
 
 
@@ -11,9 +12,4 @@ class Test:
 
         :rtype: None
         """
-        assert (
-            len(
-                get_document()["vivado"].get("create_project", "").splitlines()
-            )
-            > 1
-        )
+        assert len(get_document()["vivado"].get("create_project", "").splitlines()) > 1
