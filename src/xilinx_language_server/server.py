@@ -24,9 +24,7 @@ from lsprotocol.types import (
 from pygls.lsp.server import LanguageServer
 
 
-def check_filetype(
-    uri: str, shebang: str = ""
-) -> Literal["vivado", "vitis", ""]:
+def check_filetype(uri: str, shebang: str = "") -> Literal["vivado", "vitis", ""]:
     r"""Check filetype.
 
     :param uri:
@@ -85,9 +83,7 @@ class XilinxLanguageServer(LanguageServer):
             filetype = check_filetype(params.text_document.uri, shebang)
             if not filetype:
                 return None
-            word = self._cursor_word(
-                params.text_document.uri, params.position, True
-            )
+            word = self._cursor_word(params.text_document.uri, params.position, True)
             if not word:
                 return None
             doc = self.document[filetype].get(word[0])
@@ -112,9 +108,7 @@ class XilinxLanguageServer(LanguageServer):
             filetype = check_filetype(params.text_document.uri, shebang)
             if not filetype:
                 return CompletionList(is_incomplete=False, items=[])
-            word = self._cursor_word(
-                params.text_document.uri, params.position, False
-            )
+            word = self._cursor_word(params.text_document.uri, params.position, False)
             token = "" if word is None else word[0]
             items = [
                 CompletionItem(
@@ -163,9 +157,7 @@ class XilinxLanguageServer(LanguageServer):
                 word = (
                     line[m.start() : end],
                     Range(
-                        start=Position(
-                            line=position.line, character=m.start()
-                        ),
+                        start=Position(line=position.line, character=m.start()),
                         end=Position(line=position.line, character=end),
                     ),
                 )
