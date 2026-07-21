@@ -5,7 +5,6 @@ r"""Server
 import json
 import os
 import re
-from typing import Any, Literal, Tuple
 
 from lsprotocol.types import (
     TEXT_DOCUMENT_COMPLETION,
@@ -22,54 +21,21 @@ from lsprotocol.types import (
     TextDocumentPositionParams,
 )
 from pygls.lsp.server import LanguageServer
-
-
-def check_filetype(
-    uri: str, shebang: str = ""
-) -> Literal["vivado", "vitis", ""]:
-    r"""Check filetype.
-
-    :param uri:
-    :type uri: str
-    :param shebang:
-    :type shebang: str
-    :rtype: Literal["vivado", "vitis", ""]
-    """
-    if uri.endswith("xdc"):
-        return "vivado"
-    if shebang.startswith("#!"):
-        if "vivado" in shebang:
-            return "vivado"
-        if "xsct" in shebang:
-            return "vitis"
-    return ""
-
-
-def get_document() -> dict[str, dict[str, str]]:
-    r"""Get document.
-
-    :rtype: dict[str, dict[str, str]]
-    """
-    path = os.path.join(os.path.dirname(__file__), "assets", "json")
-    with open(os.path.join(path, "vivado.json")) as f:
-        vivado = json.load(f)
-    with open(os.path.join(path, "xsct.json")) as f:
-        xsct = json.load(f)
-    return {"vivado": vivado, "vitis": xsct}
+from pygls.workspace.text_document import TextDocument
 
 
 class XilinxLanguageServer(LanguageServer):
     r"""Xilinx language server."""
 
-    def __init__(self, *args: Any) -> None:
-        r"""Init.
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
 
-        :param args:
-        :type args: Any
-        :rtype: None
-        """
-        super().__init__(*args)
-        self.document = get_document()
+        self.documents = {}
+        path = os.path.join(os.path.dirname(__file__), "assets", "json")
+        for filename in os.listdir(path):
+            name = filename.split(".")[0]
+            with open(os.path.join(path, filename)) as f:
+                self.documents[name] = json.load(f)
 
         @self.feature(TEXT_DOCUMENT_HOVER)
         def hover(params: TextDocumentPositionParams) -> Hover | None:
@@ -80,9 +46,7 @@ class XilinxLanguageServer(LanguageServer):
             :rtype: Hover | None
             """
             doc = self.workspace.get_text_document(params.text_document.uri)
-            content = doc.source
-            shebang = content.splitlines()[0]
-            filetype = check_filetype(params.text_document.uri, shebang)
+            filetype = self.get_filetype(doc)
             if not filetype:
                 return None
             word = self._cursor_word(
@@ -90,7 +54,7 @@ class XilinxLanguageServer(LanguageServer):
             )
             if not word:
                 return None
-            doc = self.document[filetype].get(word[0])
+            doc = self.documents[filetype].get(word[0])
             if not doc:
                 return None
             return Hover(
@@ -107,9 +71,7 @@ class XilinxLanguageServer(LanguageServer):
             :rtype: CompletionList
             """
             doc = self.workspace.get_text_document(params.text_document.uri)
-            content = doc.source
-            shebang = content.splitlines()[0]
-            filetype = check_filetype(params.text_document.uri, shebang)
+            filetype = self.get_filetype(doc)
             if not filetype:
                 return CompletionList(is_incomplete=False, items=[])
             word = self._cursor_word(
@@ -120,10 +82,10 @@ class XilinxLanguageServer(LanguageServer):
                 CompletionItem(
                     label=x,
                     kind=CompletionItemKind.Function,
-                    documentation=self.document[filetype][x],
+                    documentation=self.documents[filetype][x],
                     insert_text=x,
                 )
-                for x in self.document[filetype]
+                for x in self.documents[filetype]
                 if x.startswith(token)
             ]
             return CompletionList(is_incomplete=False, items=items)
@@ -144,7 +106,7 @@ class XilinxLanguageServer(LanguageServer):
 
     def _cursor_word(
         self, uri: str, position: Position, include_all: bool = True
-    ) -> Tuple[str, Range] | None:
+    ) -> tuple[str, Range] | None:
         r"""Cursor word.
 
         :param uri:
@@ -171,3 +133,20 @@ class XilinxLanguageServer(LanguageServer):
                 )
                 return word
         return None
+
+    @staticmethod
+    def get_filetype(doc: TextDocument) -> str:
+        ext = os.path.splitext(doc.path)[1]
+        match ext:
+            case ".xdc":
+                return "vivado"
+            case ".exp":
+                return "expect"
+        shebang = doc.source.splitlines()[0]
+        if "vivado" in shebang:
+            return "vivado"
+        if "xsct" in shebang:
+            return "vitis"
+        if "expect" in shebang:
+            return "expect"
+        return ""

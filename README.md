@@ -37,23 +37,22 @@
 [![pypi/implementation](https://shields.io/pypi/implementation/xilinx-language-server)](https://pypi.org/project/xilinx-language-server/#files)
 [![pypi/pyversions](https://shields.io/pypi/pyversions/xilinx-language-server)](https://pypi.org/project/xilinx-language-server/#files)
 
-Language server and vim plugin for xilinx:
+Language server for some TCL scripts:
 
 - [vivado](https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vivado-design-tools.html)
+  XDC
 - [vitis](https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vitis.html)
+  XSCT
+- expect
 
 Support:
 
-- [x] document hover
-- [x] completion
+- [x] textDocument/hover
+- [x] textDocument/completion
 
 ![document hover](https://github.com/Freed-Wu/xilinx-language-server/assets/32936898/ad13e891-0d73-457c-9899-3a2e2f86cbe2)
 
 ![completion](https://github.com/Freed-Wu/xilinx-language-server/assets/32936898/2111f6fe-d42a-4ef7-b529-688f3a139959)
-
-Read
-[![readthedocs](https://shields.io/readthedocs/xilinx-language-server)](https://xilinx-language-server.readthedocs.io)
-to know more.
 
 ## Documents
 
@@ -61,19 +60,6 @@ to know more.
 - [vivado-tcl-commands](https://docs.xilinx.com/r/en-US/ug835-vivado-tcl-commands)
 - [vitis-embedded](https://docs.xilinx.com/r/en-US/ug1400-vitis-embedded)
 
-## Develop
+## Related Projects
 
-Install `vivado`, `vitis` and `neovim`, then run `scripts/update.sh`.
-
-## Vim Plugin
-
-You can use
-[branch release](https://github.com/Freed-Wu/xilinx-language-server/tree/release)
-to avoid downloading unnecessary files for vim plugin. Such as for
-[dein.vim](https://github.com/Shougo/dein.vim):
-
-```vim
-call dein#add('Freed-Wu/xilinx-language-server', {
-      \ 'rev': 'release',
-      \ })
-```
+- [tcl-ls](https://github.com/lewis6991/tcl-ls)
